@@ -36,20 +36,11 @@ STATUSES = (
 )
 
 
-class Response(models.Model):
-	weight = models.PositiveIntegerField(default=1)
-	status = models.PositiveSmallIntegerField(choices=STATUSES, default=STATUSES[0][0])
-	data = JSONField(blank=True, help_text='Enter a json response')
-
-
 class Endpoint(models.Model):
 	# Request
 	method = models.CharField(max_length=8, choices=METHODS, default=METHODS[0][0])
 	path = RegexField(max_length=128, blank=False, null=False, help_text='The relative path of the url, i.e. /post/')
 	parameters = JSONField(blank=True, help_text='Enter request parameters as a json map')
-	
-	# Response
-	responses = models.ManyToManyField(Response)
 	
 	# Other
 	explanation = models.TextField(blank=True, help_text='Describe this endpoint for other administrators of django-mock-rest')
@@ -57,3 +48,9 @@ class Endpoint(models.Model):
 	def __repr__(self):
 		return '{} {}'.format(self.method, self.path)
 
+
+class Response(models.Model):
+	endpoint = models.ForeignKey(Endpoint, related_name='responses', on_delete=models.CASCADE)
+	weight = models.PositiveIntegerField(default=1)
+	status = models.PositiveSmallIntegerField(choices=STATUSES, default=STATUSES[0][0])
+	data = JSONField(blank=True, help_text='Enter a static json response')
