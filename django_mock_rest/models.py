@@ -45,7 +45,15 @@ class Endpoint(models.Model):
 	# Other
 	explanation = models.TextField(blank=True, help_text='Describe this endpoint for other administrators of django-mock-rest')
 	
-	def __repr__(self):
+	@property
+	def response_count(self):
+		return self.responses.count()
+	
+	@property
+	def path_pattern(self):
+		return self.path.pattern
+	
+	def __str__(self):
 		return '{} {}'.format(self.method, self.path)
 
 
@@ -54,3 +62,6 @@ class Response(models.Model):
 	weight = models.PositiveIntegerField(default=1)
 	status = models.PositiveSmallIntegerField(choices=STATUSES, default=STATUSES[0][0])
 	data = JSONField(blank=True, help_text='Enter a static json response')
+	
+	def __str__(self):
+		return '{} ({})'.format(self.get_status_display(), self.weight)
