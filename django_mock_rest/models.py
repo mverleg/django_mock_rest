@@ -17,14 +17,42 @@ METHODS = (
 )
 
 
+# https://www.restapitutorial.com/httpstatuscodes.html
+STATUSES = (
+	(200, '200 OK'),
+	(201, '201 Created'),
+	(204, '204 No content'),
+	(301, '301 Moved permanently'),
+	(304, '304 Not modified'),
+	(307, '307 Temporary redirect'),
+	(400, '400 Bad request'),
+	(401, '401 Unauthorized'),
+	(403, '403 Forbidden'),
+	(404, '404 Not found'),
+	(409, '409 Conflict'),
+	(500, '500 Internal server error'),
+	(501, '501 Not implemented'),
+	(999, 'Timeout (no response)'),
+)
+
+
+class Response(models.Model):
+	weight = models.PositiveIntegerField(default=1)
+	status = models.PositiveSmallIntegerField(choices=STATUSES, default=STATUSES[0][0])
+	data = JSONField(blank=True, help_text='Enter a json response')
+
+
 class Endpoint(models.Model):
 	# Request
-	method = models.CharField(max_length=8, choices=METHODS)
+	method = models.CharField(max_length=8, choices=METHODS, default=METHODS[0][0])
 	path = RegexField(max_length=128, blank=False, null=False, help_text='The relative path of the url, i.e. /post/')
-	parameters = JSONField(blank=True, help_text='')
+	parameters = JSONField(blank=True, help_text='Enter request parameters as a json map')
 	
 	# Response
-	# TODO @mark:
+	responses = models.ManyToManyField(Response)
+	
+	# Other
+	explanation = models.TextField(blank=True, help_text='Describe this endpoint for other administrators of django-mock-rest')
 	
 	def __repr__(self):
 		return '{} {}'.format(self.method, self.path)

@@ -6,7 +6,7 @@ with open('README.rst', 'r') as fh:
 	readme = fh.read()
 
 setup(
-	name='django_mock_rest',
+	name='django-mock-rest',
 	description='Simple way to create static mock data at rest api endpoints in the Django admin',
 	long_description=readme,
 	url='https://github.com/mverleg/django_mock_rest',
