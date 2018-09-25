@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from jsonfield import JSONField
 from regex_field.fields import RegexField
@@ -39,7 +41,7 @@ STATUSES = (
 class Endpoint(models.Model):
 	# Request
 	method = models.CharField(max_length=8, choices=METHODS, default=METHODS[0][0])
-	path = RegexField(max_length=128, blank=False, null=False, help_text='The relative path of the url, i.e. /post/')
+	path = models.CharField(max_length=128, blank=False, null=False, help_text='The relative path of the url as a regular expression, i.e. /post/\d/')
 	parameters = JSONField(blank=True, help_text='Enter request parameters as a json map')
 	
 	# Other
@@ -52,7 +54,11 @@ class Endpoint(models.Model):
 	
 	@property
 	def path_pattern(self):
-		return self.path.pattern
+		# return self.path.pattern
+		return self.path
+		
+	def path_regex(self):
+		return re.compile(self.path)
 	
 	def __str__(self):
 		return '{} {}'.format(self.method, self.path)

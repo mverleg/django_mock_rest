@@ -11,7 +11,7 @@ class ResponseInline(admin.StackedInline):
 
 class EndpointAdmin(admin.ModelAdmin):
 	model = Endpoint
-	fields = ('method', 'path', 'parameters', 'explanation',)
+	fields = ('method', 'path', 'parameters', 'explanation', 'require_authentication',)
 	list_display = ('method', 'path_pattern', 'response_count',)
 	list_display_links = list_display
 	list_filter = ('method',)
