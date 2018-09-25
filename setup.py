@@ -16,7 +16,7 @@ setup(
 	license='Revised BSD License (LICENSE.txt)',
 	keywords=['django', 'mock', 'test', 'unit-test', 'django-admin', 'rest', 'rest-api', 'api', 'http'],
 	version='0.1',
-	packages=['django_mock_rest',],
+	packages=['django_mock_rest', 'django_mock_rest.migrations',],
 	include_package_data=True,
 	zip_safe=True,
 	classifiers=[
@@ -33,5 +33,9 @@ setup(
 		'Programming Language :: Python :: 3.7',
 		'Topic :: Software Development :: Libraries :: Python Modules',
 	],
-	install_requires= ['django>=2.0']
+	install_requires= [
+		'django>=2.0',
+		'django-regex-field>=1.2',
+		'jsonfield>=2.0',
+	]
 )
