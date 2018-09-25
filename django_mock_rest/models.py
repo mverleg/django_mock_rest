@@ -43,6 +43,7 @@ class Endpoint(models.Model):
 	parameters = JSONField(blank=True, help_text='Enter request parameters as a json map')
 	
 	# Other
+	require_authentication = models.BooleanField(default=False, null=False)
 	explanation = models.TextField(blank=True, help_text='Describe this endpoint for other administrators of django-mock-rest')
 	
 	@property
