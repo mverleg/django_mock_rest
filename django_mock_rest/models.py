@@ -56,7 +56,8 @@ class Endpoint(models.Model):
 	def path_pattern(self):
 		# return self.path.pattern
 		return self.path
-		
+	
+	@property
 	def path_regex(self):
 		return re.compile(self.path)
 	
