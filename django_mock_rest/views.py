@@ -1,7 +1,9 @@
+from time import sleep
+
 from django.http import HttpResponse
 
 from django_mock_rest.models import Endpoint
-from search import match_paths
+from django_mock_rest.search import match_paths, choose_response
 
 
 def django_mock_rest_api(request, path):
@@ -14,8 +16,12 @@ def django_mock_rest_api(request, path):
 		return HttpResponse("Configuration error: more than one match for this method & path", status=500)
 	if len(matches) == 0:
 		return HttpResponse("No such mock endpoint: {} {}".format(request.method, path), status=404)
-	endpoint = matches[0]
+	endpoint = matches[0][0]
 	# Find a response
-	
-	
-	return HttpResponse(path)
+	response = choose_response(endpoint.responses.all())
+	if response is None:
+		return HttpResponse("Configuration error: no response with weight >0 configured for this endpoint", status=500)
+	if response.is_timeout():
+		print('Timeout response; waiting 61s')
+		sleep(61)
+	return response.to_http_response()

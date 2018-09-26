@@ -1,6 +1,8 @@
 import re
+from json import dumps
 
 from django.db import models
+from django.http import HttpResponse
 from jsonfield import JSONField
 from regex_field.fields import RegexField
 
@@ -19,6 +21,8 @@ METHODS = (
 )
 
 
+TIMEOUT = 504
+
 # https://www.restapitutorial.com/httpstatuscodes.html
 STATUSES = (
 	(200, '200 OK'),
@@ -34,7 +38,7 @@ STATUSES = (
 	(409, '409 Conflict'),
 	(500, '500 Internal server error'),
 	(501, '501 Not implemented'),
-	(999, 'Timeout (no response)'),
+	(TIMEOUT, 'Timeout (no response)'),
 )
 
 
@@ -67,9 +71,19 @@ class Endpoint(models.Model):
 
 class Response(models.Model):
 	endpoint = models.ForeignKey(Endpoint, related_name='responses', on_delete=models.CASCADE)
-	weight = models.PositiveIntegerField(default=1)
+	weight = models.PositiveIntegerField(default=1, help_text='The relative likelihood of this response being sent (0 is disabled)')
 	status = models.PositiveSmallIntegerField(choices=STATUSES, default=STATUSES[0][0])
 	data = JSONField(blank=True, help_text='Enter a static json response')
 	
 	def __str__(self):
 		return '{} ({})'.format(self.get_status_display(), self.weight)
+	
+	def is_timeout(self):
+		return self.status == TIMEOUT
+	
+	def to_http_response(self):
+		return HttpResponse(
+			content=dumps(self.data, indent=4),
+			status=self.status,
+			content_type='application/json'
+		)
