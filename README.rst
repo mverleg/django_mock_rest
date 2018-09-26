@@ -12,27 +12,29 @@ Install
 
 .. code:: bash
 
-    pip install django-mock-rest
+	pip install django-mock-rest
 
 * Add `django_mock_rest` to installed apps in `settings.py`:
 
 .. code:: python
 
-    INSTALLED_APPS = [
-        ...
-        'django_mock_rest',
-        ...
-    ]
+	INSTALLED_APPS = [
+		...
+		'django_mock_rest',
+		...
+	]
+
+* By default the mock service is available only in `DEBUG` mode. You can override this with `DJANGO_MOCK_REST = True` or `False`.
 
 * Add the root url to `url.py`:
 
 .. code:: python
 
-    urlpatterns = [
-        ...
-	    url(r'^api-mock/', include('django_mock_rest.urls')),
-        ...
-    ]
+	urlpatterns = [
+		...
+		url(r'^api-mock/', include('django_mock_rest.urls')),
+		...
+	]
 
 How to use
 ===============================
@@ -45,9 +47,9 @@ After that, you can do http(s) request to the endpoints you defined:
 
 .. code:: bash
 
-    $ curl -X GET http://127.0.0.1:8000/api-mock/post/1/
-    {
-        "post": "Hello world"
-    }
+	$ curl -X GET http://127.0.0.1:8000/api-mock/post/1/
+	{
+		"post": "Hello world"
+	}
 
 You can also see an overview of all the mock endpoints (if logged in) by visiting `~`, i.e. `http://127.0.0.1:8000/api-mock/~`.
