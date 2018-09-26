@@ -1,9 +1,23 @@
+from json import dumps
 from time import sleep
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 
 from django_mock_rest.models import Endpoint
 from django_mock_rest.search import match_paths, choose_response
+
+
+@require_GET
+@login_required
+def django_mock_rest_api_index(request):
+	endpoints = Endpoint.objects.prefetch_related()
+	index = tuple(endpoint.as_json() for endpoint in endpoints)
+	return HttpResponse(
+		content=dumps(index, indent=4),
+		content_type='application/json'
+	)
 
 
 def django_mock_rest_api(request, path):
@@ -24,4 +38,4 @@ def django_mock_rest_api(request, path):
 	if response.is_timeout():
 		print('Timeout response; waiting 61s')
 		sleep(61)
-	return response.to_http_response()
+	return response.as_http_response()

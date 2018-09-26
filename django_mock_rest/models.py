@@ -1,11 +1,10 @@
 import re
+from collections import OrderedDict
 from json import dumps
 
 from django.db import models
 from django.http import HttpResponse
 from jsonfield import JSONField
-from regex_field.fields import RegexField
-
 
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
 METHODS = (
@@ -67,6 +66,15 @@ class Endpoint(models.Model):
 	
 	def __str__(self):
 		return '{} {}'.format(self.method, self.path)
+	
+	def as_json(self):
+		return OrderedDict((
+			('method', self.get_method_display()),
+			('path', self.path),
+			('parameters', self.parameters),
+			('require_authentication', self.require_authentication),
+			('responses', tuple(resp.as_json() for resp in self.responses.all())),
+		))
 
 
 class Response(models.Model):
@@ -81,9 +89,16 @@ class Response(models.Model):
 	def is_timeout(self):
 		return self.status == TIMEOUT
 	
-	def to_http_response(self):
+	def as_http_response(self):
 		return HttpResponse(
 			content=dumps(self.data, indent=4),
 			status=self.status,
 			content_type='application/json'
 		)
+	
+	def as_json(self):
+		return OrderedDict((
+			('weight', self.weight),
+			('status', self.get_status_display()),
+			('data', self.data),
+		))
