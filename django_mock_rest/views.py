@@ -1,10 +1,12 @@
 from json import dumps
 from time import sleep
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 
+from django_mock_rest.config import is_enabled
 from django_mock_rest.models import Endpoint
 from django_mock_rest.search import match_paths, choose_response
 
@@ -12,6 +14,8 @@ from django_mock_rest.search import match_paths, choose_response
 @require_GET
 @login_required
 def django_mock_rest_api_index(request):
+	if not is_enabled():
+		return HttpResponse("Mock API not enabled", status=500)
 	endpoints = Endpoint.objects.prefetch_related()
 	index = tuple(endpoint.as_json() for endpoint in endpoints)
 	return HttpResponse(
@@ -21,6 +25,8 @@ def django_mock_rest_api_index(request):
 
 
 def django_mock_rest_api(request, path):
+	if not is_enabled():
+		return HttpResponse("Mock API not enabled", status=500)
 	path = "/" + path
 	# Filter by method
 	endpoints = Endpoint.objects.filter(method=request.method)
