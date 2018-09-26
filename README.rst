@@ -16,6 +16,8 @@ Install
 
 * Add `django_mock_rest` to installed apps in `settings.py`:
 
+.. code:: python
+
     INSTALLED_APPS = [
         ...
         'django_mock_rest',
@@ -23,6 +25,8 @@ Install
     ]
 
 * Add the root url to `url.py`:
+
+.. code:: python
 
     urlpatterns = [
         ...
@@ -35,9 +39,9 @@ How to use
 
 In the Django admin, you can create endpoints:
 
-.. image:: rources/admin_preview.png
+.. image:: https://raw.githubusercontent.com/mverleg/django_mock_rest/master/resources/admin_preview.png
 
-After that, you can do http request to the endpoints you defined:
+After that, you can do http(s) request to the endpoints you defined:
 
 .. code:: bash
 
