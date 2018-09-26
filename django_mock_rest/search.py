@@ -4,9 +4,8 @@ from random import random
 def match_paths(endpoints, path):
 	found = []
 	for endpoint in endpoints:
-		print(endpoint.path_regex, path, bool(endpoint.path_regex.fullmatch(path)))
-		if endpoint.path_regex.fullmatch(path) is not None:
-			found.append(endpoints)
+		if endpoint.path_regex.fullmatch(path):
+			found.append(endpoint)
 	return found
 
 def choose_response(responses):

@@ -26,7 +26,7 @@ def django_mock_rest_api_index(request):
 def django_mock_rest_api(request, path):
 	if not is_enabled():
 		return HttpResponse("Mock API not enabled", status=500)
-	path = "/" + path
+	path = "/" + path + ("/" if not path.endswith("/") else "")
 	# Filter by method
 	endpoints = Endpoint.objects.filter(method=request.method)
 	# Filter by path, regex-based
@@ -35,7 +35,7 @@ def django_mock_rest_api(request, path):
 		return HttpResponse("Configuration error: more than one match for this method & path", status=500)
 	if len(matches) == 0:
 		return HttpResponse("No such mock endpoint: {} {}".format(request.method, path), status=404)
-	endpoint = matches[0][0]
+	endpoint = matches[0]
 	# Find a response
 	response = choose_response(endpoint.responses.all())
 	if response is None:
