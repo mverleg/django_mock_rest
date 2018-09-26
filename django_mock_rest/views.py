@@ -1,7 +1,6 @@
 from json import dumps
 from time import sleep
 
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET

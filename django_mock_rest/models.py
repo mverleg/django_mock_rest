@@ -62,7 +62,7 @@ class Endpoint(models.Model):
 	
 	@property
 	def path_regex(self):
-		return re.compile(self.path)
+		return re.compile('^{}$'.format(self.path))
 	
 	def __str__(self):
 		return '{} {}'.format(self.method, self.path)
