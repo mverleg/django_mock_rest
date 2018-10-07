@@ -3,6 +3,7 @@ from time import sleep
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from django_mock_rest.config import is_enabled
@@ -23,6 +24,7 @@ def django_mock_rest_api_index(request):
 	)
 
 
+@csrf_exempt
 def django_mock_rest_api(request, path):
 	if not is_enabled():
 		return HttpResponse("Mock API not enabled", status=500)

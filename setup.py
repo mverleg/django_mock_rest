@@ -15,7 +15,7 @@ setup(
 	author_email='mverleg.noreply@gmail.com',
 	license='Revised BSD License (LICENSE.txt)',
 	keywords=['django', 'mock', 'test', 'unit-test', 'django-admin', 'rest', 'rest-api', 'api', 'http'],
-	version='1.2',
+	version='1.3',
 	packages=['django_mock_rest', 'django_mock_rest.migrations',],
 	include_package_data=True,
 	zip_safe=True,
